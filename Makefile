@@ -8,12 +8,12 @@ CFLAGS = -Wall -Wextra -pedantic
 .PHONY: build_debug clean pack
 
 build: main.cpp
-	$(CC) $(CFLAGS) $^ -o isa
+	$(CC) $(CFLAGS) $^ -o secret
 
 build_debug: main.cpp
-	$(CC) -g $(CFLAGS) $^ -o isa
+	$(CC) -g $(CFLAGS) $^ -o secret
 
 clean:
-	-rm ./isa
+	-rm ./secret
 
 pack:
