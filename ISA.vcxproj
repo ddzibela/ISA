@@ -87,6 +87,7 @@
     <AdditionalSourcesToCopyMapping>Makefile;$(AdditionalSourcesToCopyMapping)</AdditionalSourcesToCopyMapping>
     <RemoteCleanCommandLine>make clean</RemoteCleanCommandLine>
     <RemoteReBuildCommandLine>make clean; make build_debug</RemoteReBuildCommandLine>
+    <RemoteBuildOutputs>$(RemoteProjectDir)./secret</RemoteBuildOutputs>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <RemoteBuildCommandLine>make build</RemoteBuildCommandLine>
@@ -98,7 +99,10 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="Makefile" />
+    <CustomBuild Include="Makefile">
+      <RemoteCopyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</RemoteCopyFile>
+      <RemoteCopyFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</RemoteCopyFile>
+    </CustomBuild>
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
