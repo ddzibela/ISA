@@ -107,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="client.hpp" />
+    <ClInclude Include="mtu.hpp" />
     <ClInclude Include="optArgs.hpp" />
   </ItemGroup>
   <ItemDefinitionGroup />
