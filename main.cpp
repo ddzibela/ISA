@@ -62,8 +62,23 @@ int main(int argc, char** argv)
 		return 1;
 	}
 	//send file
+	if (options.r && options.s) {
+		try {
+			client cli(&options);
+			cli.sendFile();
+		}
+		catch (std::invalid_argument e) {
 
+		}
+		catch (std::runtime_error e) {
+
+		}
+		return 0;
+	}
 	//run in server mode
-	std::cout << "hello makefile\n";
+	if (options.l) {
+
+	}
+
 	return 0;
 }
