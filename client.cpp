@@ -53,5 +53,5 @@ void client::sendFile()
 	//send packet
 	//listen for return packet 
 	//poll to check we can write again
-	//repetitio ad absurdum
+	//repetitio ad nauseam
 }
