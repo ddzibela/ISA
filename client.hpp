@@ -1,11 +1,16 @@
 #pragma once
-#include "optArgs.hpp"
-
+#include <cstdint>
+#include <algorithm>
+#include <iostream>
+#include <fstream>
+#include <netinet/in.h>
 #include <netdb.h>	   // getaddrinfo
 #include <string.h>	   //memset
 #include <arpa/inet.h> // inet_ntop
 #include <netinet/ip_icmp.h> //icmp headers
 #include <openssl/aes.h> //AES symmetric encryption
+#include "optArgs.hpp"
+#include "mtu.hpp" //define MTU
 
 class client
 {
