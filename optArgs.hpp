@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 struct optArgs {
 	bool r, s, l; //option flags
 	bool u; //used for unknown option
