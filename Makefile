@@ -7,10 +7,10 @@ CFLAGS = -Wall -Wextra -pedantic
 
 .PHONY: build_debug clean pack
 
-build: main.cpp
+build: main.cpp client.cpp
 	$(CC) $(CFLAGS) $^ -o secret
 
-build_debug: main.cpp
+build_debug: main.cpp client.hpp client.cpp
 	$(CC) -g $(CFLAGS) $^ -o secret
 
 clean:
