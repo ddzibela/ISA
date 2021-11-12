@@ -31,5 +31,8 @@
     <ClInclude Include="mtu.hpp">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="icmp.hpp">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
