@@ -11,6 +11,7 @@
 #include <openssl/aes.h> //AES symmetric encryption
 #include "optArgs.hpp"
 #include "mtu.hpp" //define MTU
+#include "icmp.hpp" //Echo header
 
 class client
 {
