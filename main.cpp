@@ -8,6 +8,7 @@
 
 #include"optArgs.hpp"
 #include"client.hpp"
+#include "server.hpp"
 
 /*
 * @brief get commandline options and return in struct

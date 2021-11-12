@@ -7,6 +7,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Source files</Filter>
     </ClCompile>
+    <ClCompile Include="server.cpp">
+      <Filter>Source files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Makefile" />
@@ -32,6 +35,9 @@
       <Filter>Header files</Filter>
     </ClInclude>
     <ClInclude Include="icmp.hpp">
+      <Filter>Header files</Filter>
+    </ClInclude>
+    <ClInclude Include="server.hpp">
       <Filter>Header files</Filter>
     </ClInclude>
   </ItemGroup>

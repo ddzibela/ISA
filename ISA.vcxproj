@@ -98,6 +98,7 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="Makefile">
@@ -110,6 +111,7 @@
     <ClInclude Include="icmp.hpp" />
     <ClInclude Include="mtu.hpp" />
     <ClInclude Include="optArgs.hpp" />
+    <ClInclude Include="server.hpp" />
   </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
