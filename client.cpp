@@ -1,6 +1,7 @@
 #include "client.hpp"
 #include <iostream>
 #include <exception>
+#include <algorithm>
 
 void* get_in_addr(struct sockaddr* sa)
 {
@@ -48,8 +49,9 @@ void client::sendFile()
 		throw std::runtime_error(gai_strerror(result));
 	}
 
-	char ip[100];
-	inet_ntop(serverInfo->ai_family, get_in_addr(serverInfo->ai_addr), ip, 100);
+	//get human readable ip, test only
+	//char ip[100];
+	//inet_ntop(serverInfo->ai_family, get_in_addr(serverInfo->ai_addr), ip, 100);
 	//std::cerr << ip << std::endl;
 
 	//determine protocol version from ip version
@@ -73,6 +75,7 @@ void client::sendFile()
 	std::streamoff fileSize = fileEndPos.operator std::streamoff();
 	std::cerr << fileSize <<  std::endl;
 	uint16_t sequence = 0;
+	uint64_t sent = 1;
 	do {
 		sequence++;
 		//packet fuckery
@@ -96,8 +99,15 @@ void client::sendFile()
 		else {
 			secretProtoTransfer* secret = (secretProtoTransfer*)(packet + sizeof(icmpEcho));
 			secret->magic = icmpHeader->identifier;
-			//memcpy data
+			std::streamoff toSend = MTU - fileSize;
+			toSend = (toSend < 0) ? 0 : toSend;
+			char data[MTU];
+			//std::fill(secret->data, data + MTU, 0);
+			//holy mother of typecasting
+			file.read((char*)(void*)(&secret->data), toSend);
+			std::cerr << &secret->data;
 		}
+		
 		//encrypt the packet
 		//checksum
 		//poll if we can write to socket
