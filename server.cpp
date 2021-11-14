@@ -2,7 +2,7 @@
 
 server::server()
 {
-	this->captureFilter = "inbound and (icmp[icmptype] == icmp-echo of icmp6[icmp6type] == icmp6-echo)";
+	this->captureFilter = "inbound and (icmp[icmptype] = icmp-echo of icmp6[icmp6type] = icmp6-echo)";
 }
 
 void server::run()

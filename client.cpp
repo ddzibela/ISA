@@ -103,7 +103,7 @@ void client::sendFile()
 			//encrypt the secret data
 
 
-			AES_encrypt((unsigned char*)(void*)secret, (unsigned char*)(void*)secret, &this->key);
+			//AES_encrypt((unsigned char*)(void*)secret, (unsigned char*)(void*)secret, &this->key);
 		}
 		else { //we are sending the file
 			secretProtoTransfer* secret = (secretProtoTransfer*)(packet + sizeof(icmpEcho));
@@ -121,7 +121,8 @@ void client::sendFile()
 				bytesRead = file.tellg() - bytesRead;
 			}
 			secret->dataLen = bytesRead;
-			AES_encrypt(packet, packet, &this->key);
+			
+			//AES_encrypt(packet, packet, &this->key);
 		}
 
 		

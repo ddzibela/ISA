@@ -26,7 +26,6 @@ private:
 	int icmpv; //ICMP version
 	AES_KEY key;
 
-	void getAddr(const char* host, struct addrinfo* serverInfo);
 	void getFileName(const std::string filePath);
 public:
 	void sendFile();
