@@ -9,6 +9,7 @@
 #include <arpa/inet.h> // inet_ntop
 #include <netinet/ip_icmp.h> //icmp headers
 #include <openssl/aes.h> //AES symmetric encryption
+#include <pcap.h>
 #include "optArgs.hpp"
 #include "mtu.hpp" //define MTU
 #include "icmp.hpp" //Echo header

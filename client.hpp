@@ -1,8 +1,12 @@
 #pragma once
 #include <cstdint>
+#include <cstdlib>
+#include <ctime>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <exception>
+#include <poll.h>
 #include <netinet/in.h>
 #include <netdb.h>	   // getaddrinfo
 #include <string.h>	   //memset
@@ -20,6 +24,7 @@ private:
 	std::string filePath;
 	std::string fileName;
 	int icmpv; //ICMP version
+	AES_KEY key;
 
 	void getAddr(const char* host, struct addrinfo* serverInfo);
 	void getFileName(const std::string filePath);

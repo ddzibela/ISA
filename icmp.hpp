@@ -22,5 +22,6 @@ struct secretProtoEstablish
 struct secretProtoTransfer
 {
 	uint16_t magic;
+	uint16_t dataLen;
 	char* data;
 };
