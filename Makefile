@@ -8,10 +8,10 @@ CFLAGS = -Wall -Wextra -pedantic
 .PHONY: build_debug clean pack
 
 build: main.cpp client.cpp
-	$(CC) $(CFLAGS) $^ -o secret
+	$(CC) $(CFLAGS) $^ -o secret -lssl -lcrypto
 
 build_debug: main.cpp client.hpp client.cpp
-	$(CC) -g $(CFLAGS) $^ -o secret
+	$(CC) -g $(CFLAGS) $^ -o secret -lssl -lcrypto
 
 clean:
 	-rm ./secret
