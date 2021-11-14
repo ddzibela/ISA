@@ -113,6 +113,11 @@
     <ClInclude Include="optArgs.hpp" />
     <ClInclude Include="server.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="secret.1">
+      <RemoteCopyFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</RemoteCopyFile>
+    </None>
+  </ItemGroup>
   <ItemDefinitionGroup />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
