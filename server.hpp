@@ -24,6 +24,7 @@ private:
 	uint16_t sequence;
 	uint64_t size;
 	std::ofstream file;
+	AES_KEY key;
 public:
 	server();
 	void run();

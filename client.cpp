@@ -1,15 +1,5 @@
 #include "client.hpp"
 
-void* get_in_addr(struct sockaddr* sa)
-{
-	if (sa->sa_family == AF_INET)
-	{
-		return &(((struct sockaddr_in*)sa)->sin_addr);
-	}
-
-	return &(((struct sockaddr_in6*)sa)->sin6_addr);
-}
-
 client::client(optArgs* args)
 {
 	if (args != nullptr) {
@@ -47,10 +37,6 @@ void client::sendFile()
 		throw std::runtime_error(gai_strerror(result));
 	}
 
-	//get human readable ip, test only
-	//char ip[100];
-	//inet_ntop(serverInfo->ai_family, get_in_addr(serverInfo->ai_addr), ip, 100);
-	//std::cerr << ip << std::endl;
 
 	//determine protocol version from ip version
 	this->icmpv = ((serverInfo->ai_family == AF_INET) ? IPPROTO_ICMP : IPPROTO_ICMPV6);
@@ -139,13 +125,19 @@ void client::sendFile()
 		//send
 		//determine lenght of data to be sent
 		if (sequence == 1) { 
-			if (sendto(sock, packet, sizeof(icmpEcho) + sizeof(secretProtoEstablish) + this->fileName.length() - 8, 0, (struct sockaddr*)(serverInfo->ai_addr), serverInfo->ai_addrlen) < 0) {
+			for (size_t i = sizeof(icmpEcho); i <= sizeof(icmpEcho) + sizeof(secretProtoEstablish) + this->fileName.length() - 8; i += 16) {
+				AES_encrypt(packet + i, packet + i, &this->key);
+			}
+			if (sendto(sock, packet, sizeof(icmpEcho) + sizeof(secretProtoEstablish) + this->fileName.length() + 8, 0, (struct sockaddr*)(serverInfo->ai_addr), serverInfo->ai_addrlen) < 0) {
 				file.close();
 				throw std::runtime_error("Error sending socket.");
 			}
 		}
 		else {
-			if (sendto(sock, packet, sizeof(icmpEcho) + sizeof(secretProtoTransfer) + bytesRead - 8, 0, (struct sockaddr*)(serverInfo->ai_addr), serverInfo->ai_addrlen) < 0) {
+			for (size_t i = sizeof(icmpEcho); i <= sizeof(icmpEcho) + sizeof(secretProtoTransfer) + bytesRead - 8; i += 16) {
+				AES_encrypt(packet + i, packet + i, &this->key);
+			}
+			if (sendto(sock, packet, sizeof(icmpEcho) + sizeof(secretProtoTransfer) + bytesRead + 8, 0, (struct sockaddr*)(serverInfo->ai_addr), serverInfo->ai_addrlen) < 0) {
 				file.close();
 				throw std::runtime_error("Error sending socket.");
 			}

@@ -5,6 +5,7 @@ server::server()
 	this->magic = 0;
 	this->candidateMagic = 0;
 	this->sequence = 1;
+	AES_set_decrypt_key(xlogin, 128, &this->key);
 }
 
 void server::run()
@@ -30,8 +31,10 @@ void server::run()
 	}
 	//capture packets
 	unsigned char linktype = pcap_datalink(handle);
+	unsigned char decPacket[1500];
 	while (true) {
 		packet = pcap_next(handle, &header);
+		std::fill(decPacket, decPacket + 1499, 0);
 		if (linktype == DLT_LINUX_SLL) {
 			auto sllHeader = (sll_header*)packet;
 			if (sllHeader->sll_pkttype != LINUX_SLL_HOST) {
@@ -48,14 +51,17 @@ void server::run()
 
 			icmpEcho* icmpHeader = (icmpEcho*)(packet + sizeof(sll_header) + ipSize);
 			//decypher the packet here
+			for (size_t i = sizeof(sll_header) + ipSize + sizeof(icmpEcho); i < header.caplen; i += 16) {
+				AES_decrypt(packet + i, decPacket + i, &this->key);
+			}
 			if (icmpHeader->sequence == 1 && this->sequence == 1) {
 				//nadvazujeme spojenie
-				secretProtoEstablish* secret = (secretProtoEstablish*)(packet + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
+				secretProtoEstablish* secret = (secretProtoEstablish*)(decPacket + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
 				if (icmpHeader->identifier != secret->magic) continue;
 				this->magic = secret->magic;
 				this->size = secret->size;
 				char* name = new char[secret->nameLen];
-				memcpy(name, &secret->name, secret->nameLen);
+				memcpy(name, &secret->name, secret->nameLen - 1);
 				this->file.open(name, std::ios::binary | std::ios::out);
 				delete name;
 				this->sequence++;
@@ -70,7 +76,7 @@ void server::run()
 			}
 			else if (icmpHeader->sequence != 1 && this->sequence != 1) {
 				//ukladame subor
-				secretProtoTransfer* secret = (secretProtoTransfer*)(packet + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
+				secretProtoTransfer* secret = (secretProtoTransfer*)(decPacket + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
 				if ((icmpHeader->identifier != secret->magic) && (this->magic != secret->magic)) continue;
 				this->file.write((char*)(void*)&secret->data, secret->dataLen);
 				this->size -= secret->dataLen;
