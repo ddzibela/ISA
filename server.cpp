@@ -89,10 +89,5 @@ void server::run()
 				this->sequence = 1;
 			}
 		}
-		else if (linktype == DLT_LINUX_SLL2) {
-
-		}
-
-
 	}
 }

@@ -77,8 +77,8 @@
 #ifndef lib_pcap_sll_h
 #define lib_pcap_sll_h
 
-#include <pcap/pcap-inttypes.h>
-
+//#include <pcap/pcap-inttypes.h>
+#include <cstdint>
   /*
    * A DLT_LINUX_SLL fake link-layer header.
    */
