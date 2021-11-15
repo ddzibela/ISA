@@ -2,6 +2,8 @@
 #include <cstdint>
 #include <fstream>
 
+#define xlogin (unsigned char*)"xdzibe00xdzibe00"
+
 struct icmpEcho
 {
 	uint8_t type;
