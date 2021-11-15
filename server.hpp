@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <netinet/in.h>
+#include <utility>
 #include <netdb.h>	   // getaddrinfo
 #include <string.h>	   //memset
 #include <arpa/inet.h> // inet_ntop
@@ -20,6 +21,9 @@ class server
 private:
 	uint16_t magic;
 	uint16_t candidateMagic;
+	uint16_t sequence;
+	uint64_t size;
+	std::ofstream file;
 public:
 	server();
 	void run();

@@ -2,32 +2,9 @@
 
 server::server()
 {
-}
-
-void gotPacket(u_char* args, const struct pcap_pkthdr* header,
-	const u_char* packet)
-{
-	if (*args == DLT_LINUX_SLL) {
-		auto sllHeader = (sll_header*)packet;
-		if (sllHeader->sll_pkttype != LINUX_SLL_HOST) {
-			return;
-		}
-		uint16_t ipv = 0;
-		uint16_t ipSize;
-		memcpy(&ipv, (packet + sizeof(sllHeader)), 1);
-		ipv = ntohs(ipv);
-		ipv &= 0xF;
-		if (ipv == AF_INET) { //working with ipv4
-			iphdr* ipHeader = (iphdr*)(packet + sizeof(sllHeader));
-			
-		}
-		else if (ipv == AF_INET6){ //working with ipv6
-
-		}
-	}
-	if (*args == DLT_LINUX_SLL2) {
-
-	}
+	this->magic = 0;
+	this->candidateMagic = 0;
+	this->sequence = 1;
 }
 
 void server::run()
@@ -37,7 +14,6 @@ void server::run()
 	char filterstring[] = "icmp[icmptype] = icmp-echo or icmp6[icmp6type] = icmp6-echo";
 	bpf_program captureFilter;
 	pcap_pkthdr header;
-	this->magic = 0;
 	//setup pcap
 	pcap_t* handle = pcap_open_live("any", BUFSIZ, 1, 1000, errbuf);
 	if (handle == nullptr) {
@@ -54,5 +30,63 @@ void server::run()
 	}
 	//capture packets
 	unsigned char linktype = pcap_datalink(handle);
-	pcap_loop(handle, -1, &gotPacket, &linktype);
+	while (true) {
+		packet = pcap_next(handle, &header);
+		if (linktype == DLT_LINUX_SLL) {
+			auto sllHeader = (sll_header*)packet;
+			if (sllHeader->sll_pkttype != LINUX_SLL_HOST) {
+				continue;
+			}
+			uint16_t ipSize;
+			iphdr* ipHeader = (iphdr*)(packet + sizeof(sll_header));
+			if (ipHeader->version == 4) {
+				ipSize = sizeof(iphdr);
+			}
+			else {
+				//ipSize = sizeof()
+			}
+
+			icmpEcho* icmpHeader = (icmpEcho*)(packet + sizeof(sll_header) + ipSize);
+			//decypher the packet here
+			if (icmpHeader->sequence == 1 && this->sequence == 1) {
+				//nadvazujeme spojenie
+				secretProtoEstablish* secret = (secretProtoEstablish*)(packet + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
+				if (icmpHeader->identifier != secret->magic) continue;
+				this->magic = secret->magic;
+				this->size = secret->size;
+				char* name = new char[secret->nameLen];
+				memcpy(name, &secret->name, secret->nameLen);
+				this->file.open(name, std::ios::binary | std::ios::out);
+				delete name;
+				this->sequence++;
+			}
+			else if (icmpHeader->sequence == 1 && this->sequence != 1) {
+				//ignorujeme
+				continue;
+			}
+			else if (icmpHeader->sequence != 1 && this->sequence == 1) {
+				//ignorujeme
+				continue;
+			}
+			else if (icmpHeader->sequence != 1 && this->sequence != 1) {
+				//ukladame subor
+				secretProtoTransfer* secret = (secretProtoTransfer*)(packet + sizeof(sll_header) + ipSize + sizeof(icmpEcho));
+				if ((icmpHeader->identifier != secret->magic) && (this->magic != secret->magic)) continue;
+				this->file.write((char*)(void*)&secret->data, secret->dataLen);
+				this->size -= secret->dataLen;
+			}
+			if (this->size == 0) {
+				//we have received the file, start with clean slate
+				this->file.close();
+				this->magic = 0;
+				this->candidateMagic = 0;
+				this->sequence = 1;
+			}
+		}
+		else if (linktype == DLT_LINUX_SLL2) {
+
+		}
+
+
+	}
 }
