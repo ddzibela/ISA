@@ -17,6 +17,8 @@
 #include "mtu.hpp" //define MTU
 #include "icmp.hpp" //Echo header
 
+#define xlogin (unsigned char*)"xdzibe00xdzibe00"
+
 class client
 {
 private:

@@ -112,6 +112,7 @@
     <ClInclude Include="mtu.hpp" />
     <ClInclude Include="optArgs.hpp" />
     <ClInclude Include="server.hpp" />
+    <ClInclude Include="sll.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="secret.1">

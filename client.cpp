@@ -78,7 +78,6 @@ void client::sendFile()
 	uint16_t magic = rand();
 	std::streamoff bytesRead;
 	pollfd pollFds = { sock, POLLOUT, 0};
-	unsigned char xlogin[] = "xdzibe00";
 	AES_set_encrypt_key(xlogin, 128, &this->key);
 
 	do {
@@ -88,7 +87,12 @@ void client::sendFile()
 		std::fill(packet, packet + MTU, 0);//sometimes faster than memset
 		//icmp header construction
 		icmpEcho* icmpHeader = (icmpEcho*)packet;//cast icmp header onto packet
-		icmpHeader->type = ICMP_ECHO;
+		if (icmpv == IPPROTO_ICMP) {
+			icmpHeader->type = ICMP_ECHO;
+		}
+		else {
+			icmpHeader->type = 128;
+		}
 		icmpHeader->sequence = sequence;
 		icmpHeader->identifier = magic;
 

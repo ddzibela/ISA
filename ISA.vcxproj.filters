@@ -40,6 +40,9 @@
     <ClInclude Include="server.hpp">
       <Filter>Header files</Filter>
     </ClInclude>
+    <ClInclude Include="sll.hpp">
+      <Filter>Header files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="secret.1" />

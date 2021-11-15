@@ -13,12 +13,13 @@
 #include "optArgs.hpp"
 #include "mtu.hpp" //define MTU
 #include "icmp.hpp" //Echo header
+#include "sll.hpp"
 
 class server
 {
 private:
-	std::string captureFilter;
 	uint16_t magic;
+	uint16_t candidateMagic;
 public:
 	server();
 	void run();
